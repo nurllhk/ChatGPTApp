@@ -1,10 +1,9 @@
-import 'dart:convert';
-
-import 'package:chatgptapi/default.dart';
-import 'package:chatgptapi/env/env_variable.dart';
+import 'package:chatgptapi/widget/constant/default.dart';
+import 'package:chatgptapi/services/post_services.dart';
+import 'package:chatgptapi/widget/chat_message.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'model.dart';
+
+import '../model/model.dart';
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -25,43 +24,13 @@ class _ChatHomeState extends State<ChatHome> {
     super.initState();
   }
 
-  Future<String> createResponse(String newProm) async {
-    const api = DefaultApi.API;
-    var uri = Uri.https('api.openai.com', '/v1/completions');
-
-    final respons = await http.post(uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer $api'
-        },
-        body: jsonEncode({
-          'model': 'text-davinci-003',
-          'prompt': newProm,
-          'temperature': 0,
-          'top_p': 1,
-          'frequency_penalty': 0.0,
-          'presence_penalty': 0.0
-        }));
-    Map<String, dynamic> messagerespone = jsonDecode(respons.body);
-    print("hattatatatatattaa ata atatat t at at at a tat at ");
-    print(respons.body);
-    if (messagerespone['choices'] != null &&
-        messagerespone['choices'].length > 0) {
-      return messagerespone['choices'][0]['text'];
-    } else {
-      print('Unexpected response format');
-      return '';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           Strings.appNmae,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Default.textColor),
         ),
         backgroundColor: Default.backgrounColor,
       ),
@@ -81,15 +50,15 @@ class _ChatHomeState extends State<ChatHome> {
           Visibility(
               visible: loading,
               child: const CircularProgressIndicator(
-                color: Colors.white,
+                color: Default.textColor,
               )),
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: Palet.inputPad,
             child: Row(
               children: [
                 Expanded(
                     child: TextField(
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Default.textColor),
                   controller: textController,
                   decoration: const InputDecoration(
                     filled: true,
@@ -109,13 +78,13 @@ class _ChatHomeState extends State<ChatHome> {
                                   messagetype: MessageType.user));
                               loading = true;
                             });
-                            var input = textController.text;
+                            String input = textController.text;
                             textController.clear();
-                            Future.delayed(Duration(milliseconds: 60))
+                            Future.delayed(Palet.timeone)
                                 .then((value) {
                               return touchDown();
                             });
-                            createResponse(input).then((value) {
+                           PostServices().createResponse(input).then((value) {
                               setState(() {
                                 loading = false;
                                 message.add(GptMessage(
@@ -124,7 +93,7 @@ class _ChatHomeState extends State<ChatHome> {
                               });
                             });
                             textController.clear();
-                            Future.delayed(Duration(milliseconds: 70))
+                            Future.delayed(Palet.timeone)
                                 .then((value) => touchDown());
                           },
                           icon: const Icon(
@@ -142,59 +111,6 @@ class _ChatHomeState extends State<ChatHome> {
 
   void touchDown() {
     scrollController.animateTo(scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-  }
-}
-
-class ChatMessage extends StatelessWidget {
-  final String messagetext;
-  final MessageType messageType;
-
-  const ChatMessage(
-      {super.key, required this.messagetext, required this.messageType});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      margin: EdgeInsets.all(15),
-      color: messageType == MessageType.bot
-          ? Default.inputColor
-          : Default.backgrounColor,
-      child: Row(
-        children: [
-          messageType == MessageType.bot
-              ? Container(
-                  margin: EdgeInsets.only(right: 15),
-                  child: CircleAvatar(
-                    child: Image.asset("images/chat.png"),
-                  ),
-                )
-              : Container(
-                  child: CircleAvatar(
-                    child: Icon(Icons.person),
-                  ),
-                ),
-          Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                child: Text(
-                  messagetext,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Colors.white),
-                ),
-              )
-            ],
-          ))
-        ],
-      ),
-    );
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 }
