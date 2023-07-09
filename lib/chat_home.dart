@@ -34,12 +34,17 @@ class _ChatHomeState extends State<ChatHome> {
       ),
       body: Column(
         children: [
-          ListView.builder(
-              itemCount: message.length,
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                return ChatMessage(messagetext: '', messageType: null,);
-              }),
+          Expanded(
+            child: ListView.builder(
+                itemCount: message.length,
+                controller: scrollController,
+                itemBuilder: (context, index) {
+                  return ChatMessage(
+                    messagetext: message[index].mesageText,
+                    messageType: message[index].messagetype,
+                  );
+                }),
+          ),
           Visibility(
               visible: loading,
               child: const CircularProgressIndicator(
@@ -91,9 +96,42 @@ class ChatMessage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       margin: EdgeInsets.all(15),
-
-      color: messageType == MessageType.bot ? Default.inputColor:Default.backgrounColor ,
-
+      color: messageType == MessageType.bot
+          ? Default.inputColor
+          : Default.backgrounColor,
+      child: Row(
+        children: [
+          messageType == MessageType.bot
+              ? Container(
+                  margin: EdgeInsets.only(right: 15),
+                  child: CircleAvatar(
+                    child: Image.asset("images/chat.png"),
+                  ),
+                )
+              : Container(
+                  child: CircleAvatar(
+                    child: Icon(Icons.person),
+                  ),
+                ),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                child: Text(
+                  messagetext,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: Colors.white),
+                ),
+              )
+            ],
+          ))
+        ],
+      ),
     );
   }
 }
