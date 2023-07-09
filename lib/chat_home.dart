@@ -1,6 +1,9 @@
-import 'package:chatgptapi/default.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:chatgptapi/default.dart';
+import 'package:chatgptapi/env/env_variable.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'model.dart';
 
 class ChatHome extends StatefulWidget {
@@ -20,6 +23,36 @@ class _ChatHomeState extends State<ChatHome> {
   void initState() {
     loading = false;
     super.initState();
+  }
+
+  Future<String> createResponse(String newProm) async {
+    const api = DefaultApi.API;
+    var uri = Uri.https('api.openai.com', '/v1/completions');
+
+    final respons = await http.post(uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer $api'
+        },
+        body: jsonEncode({
+          'model': 'text-davinci-003',
+          'prompt': newProm,
+          'temperature': 0,
+          'top_p': 1,
+          'frequency_penalty': 0.0,
+          'presence_penalty': 0.0
+        }));
+    Map<String, dynamic> messagerespone = jsonDecode(respons.body);
+    print("hattatatatatattaa ata atatat t at at at a tat at ");
+    print(respons.body);
+    if (messagerespone['choices'] != null &&
+        messagerespone['choices'].length > 0) {
+      return messagerespone['choices'][0]['text'];
+    } else {
+      print('Unexpected response format');
+      return '';
+    }
   }
 
   @override
@@ -69,7 +102,31 @@ class _ChatHomeState extends State<ChatHome> {
                     child: Container(
                       color: Default.inputColor,
                       child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              message.add(GptMessage(
+                                  mesageText: textController.text,
+                                  messagetype: MessageType.user));
+                              loading = true;
+                            });
+                            var input = textController.text;
+                            textController.clear();
+                            Future.delayed(Duration(milliseconds: 60))
+                                .then((value) {
+                              return touchDown();
+                            });
+                            createResponse(input).then((value) {
+                              setState(() {
+                                loading = false;
+                                message.add(GptMessage(
+                                    mesageText: value,
+                                    messagetype: MessageType.bot));
+                              });
+                            });
+                            textController.clear();
+                            Future.delayed(Duration(milliseconds: 70))
+                                .then((value) => touchDown());
+                          },
                           icon: const Icon(
                             Icons.send,
                             color: Default.buttonColor,
@@ -81,6 +138,11 @@ class _ChatHomeState extends State<ChatHome> {
         ],
       ),
     );
+  }
+
+  void touchDown() {
+    scrollController.animateTo(scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 }
 
@@ -119,7 +181,8 @@ class ChatMessage extends StatelessWidget {
             children: [
               Container(
                 padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   messagetext,
                   style: Theme.of(context)

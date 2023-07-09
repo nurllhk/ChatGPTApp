@@ -1,7 +1,6 @@
 import 'package:chatgptapi/default.dart';
+import 'package:chatgptapi/splash.dart';
 import 'package:flutter/material.dart';
-
-import 'chat_home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +19,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ChatHome(),
+      home: const SplashScreen(),
     );
   }
 }
+
+
+
+
