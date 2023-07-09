@@ -1,18 +1,17 @@
 # Chat GPT App
 
-
-
-| |  |
+|  | |
 |:---:|:---:|
-| ![Simulator Screen Shot - iPhone 14 Pro - 2023-07-09 at 18 02 43](https://github.com/nurllhk/ChatGPTApp/assets/79688257/5b0a2f90-8c16-41df-b596-2ad5d52689e9) | ![Simulator Screen Shot - iPhone 14 Pro - 2023-07-09 at 18 03 36](https://github.com/nurllhk/ChatGPTApp/assets/79688257/49b06bb1-8347-4728-8246-a902f91b54b5) |
+| ![Simulator Screen Shot - iPhone 14 Pro - 2023-07-09 at 18 02 43](https://github.com/nurllhk/ChatGPTApp/assets/79688257/08412fc6-fe72-45d1-b849-bed9e309a4ff) | ![Simulator Screen Shot - iPhone 14 Pro - 2023-07-09 at 18 03 36](https://github.com/nurllhk/ChatGPTApp/assets/79688257/2af7813f-ceb0-425b-a4cd-b5aed04f5c01) |
 
 
 <br>
 
 
 
-https://github.com/nurllhk/ChatGPTApp/assets/79688257/df201b14-2c0f-4c04-871f-4e4e60f07130
 
+
+https://github.com/nurllhk/ChatGPTApp/assets/79688257/d3b5fb22-7cbf-4259-ae3f-3055f8d1e8d2
 
 
 
